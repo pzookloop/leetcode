@@ -10,18 +10,20 @@ public class Solution {
         Arrays.sort(arr2);
         int ans = 0;
         for (int j : arr1) {
+            // |j-arr2[i]| <= d ==>
+            // -d <= j-arr2[i] <= d ==>
+            // -d + arr2[i] <= j <= d + arr2[i] ==>
+            // 等式两边分别+/-d, 则arr2[i] <= j+d以及arr2[i]>=j-d ==> j-d<=arr2[i]<=j+d
             int left = 0, right = arr2.length - 1;
             while (left <= right) {
                 int mid = (left + right) >>> 1;
-                int abs = Math.abs(j - arr2[mid]);
-                if (abs >= d + 1) {
-                    left = mid + 1;
-                } else {
-                    break;
-                }
+                if (arr2[mid] > j+d) {
+                    right = mid-1;
+                } else if (arr2[mid] < j-d) {
+                    left = mid+1;
+                } else {break;}
             }
-
-            if (left == arr2.length) {
+            if (left > right) {
                 ans += 1;
             }
         }
