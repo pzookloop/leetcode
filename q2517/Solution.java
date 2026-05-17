@@ -15,7 +15,7 @@ public class Solution {
                 rBound = mid - 1;
             }
         }
-        return lBound-1;
+        return rBound;
     }
 
     private int check(int[] price, int mid) {
