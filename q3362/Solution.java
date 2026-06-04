@@ -1,6 +1,6 @@
-package q20250522_3362;
+package q3362;
 
-public class Q3362 {
+public class Solution {
     public int maxRemoval(int[] nums, int[][] queries) {
         // o(n)找到最大的值索引+值
         int[] maxIndexValue = findMax(nums);

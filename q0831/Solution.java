@@ -1,8 +1,8 @@
-package q831;
+package q0831;
 
 import java.util.HashMap;
 
-public class Q831 {
+public class Solution {
     public String maskPII(String s) {
 //        if (isEmail(s)) {
 //            return maskEmail(s);

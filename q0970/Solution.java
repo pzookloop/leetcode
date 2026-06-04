@@ -1,10 +1,10 @@
-package q970;
+package q0970;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Q970 {
+public class Solution {
     public List<Integer> powerfulIntegers(int x, int y, int bound) {
         HashSet<Integer> resultSet = new HashSet<>();
         for (int i = 0; i < 21; ++i) {
