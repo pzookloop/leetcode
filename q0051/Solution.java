@@ -1,79 +1,62 @@
 package q0051;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Solution {
-    private int ans = -1;
-    private int curTastySum = 0;
-    private int curSatietySum = 0;
-    private int n = 0;
-    private int limit = 0;
-    private static final Map<Integer, Integer> tastyMp = new HashMap<>();
-    private static final Map<Integer, Integer> satietyMp = new HashMap<>();
-    public int perfectMenu(int[] materials, int[][] cookbooks,
-                           int[][] attribute, int limit) {
-        this.n = cookbooks.length;
-        this.limit = limit;
-        for (int i = 0; i < attribute.length; i++) {
-            int[] cuisine = attribute[i];
-            tastyMp.put(i, cuisine[0]);
-            satietyMp.put(i, cuisine[1]);
-        }
-        dfsInput(materials, cookbooks, attribute, 0);
+    private final List<List<String>> ans = new ArrayList<>();
+    private final Map<Integer, Boolean> vis = new HashMap<>();
+    private final Map<Integer, Boolean> prim1 = new HashMap<>();
+    private final Map<Integer, Boolean> prim2 = new HashMap<>();
+    private int[] cur = null;
+    // col[i] 表示第i行的皇后放置于col[i]列
+    public List<List<String>> solveNQueens(int n) {
+        cur = new int[n];
+        dfs(0, n);
         return ans;
     }
 
-    private void dfsInput(int[] materials, int[][] cookbooks, int[][] attribute, int i) {
-        if (i == n) {
-            if (curSatietySum >= limit) {
-                ans = Math.max(ans, curTastySum);
+    private void dfs(int r, int n) {
+        if (r == n) {
+            List<String> map = new ArrayList<>();
+            StringBuilder builder = new StringBuilder();
+            for (int k : cur) {
+                builder.repeat(".", n);
+                builder.setCharAt(k, 'Q');
+                map.add(builder.toString());
+                // 清空本轮的数据
+                builder.setLength(0);
             }
-            return;
-        };
-        dfsInput(materials, cookbooks, attribute, i+1);
-        if (canMake(materials, cookbooks[i])) {
-            curTastySum += attribute[i][0];
-            curSatietySum += attribute[i][1];
-            calRemindMaterial(materials, cookbooks[i], -1);
-            dfsInput(materials, cookbooks, attribute, i+1);
-            calRemindMaterial(materials, cookbooks[i], 1);
-            curTastySum -= attribute[i][0];
-            curSatietySum -= attribute[i][1];
+            ans.add(map);
         }
-    }
 
-    private void calRemindMaterial(int[] materials, int[] cookbook, int coe) {
-        for (int i = 0; i < materials.length; i++) {
-            materials[i] += coe * cookbook[i];
-        }
-    }
-
-    private boolean canMake(int[] materials, int[] cookbook) {
-        for (int i = 0; i < materials.length; i++) {
-            if (materials[i] < cookbook[i]) return false;
-        }
-        return true;
-    }
-
-    private void dfsOutput(int[] materials, int[][] cookbooks, int[][] attribute, int i) {
-        if (curSatietySum >= limit) {
-            ans = Math.max(ans, curTastySum);
-        }
-        if (i >= n) {
-            return;
-        }
-        for (int j = i; j < n; j++) {
-            int[] cookbook = cookbooks[j];
-            if (canMake(materials, cookbook)) {
-                curTastySum += attribute[j][0];
-                curSatietySum += attribute[j][1];
-                calRemindMaterial(materials, cookbook, -1);
-                dfsOutput(materials, cookbooks, attribute, j+1);
-                calRemindMaterial(materials, cookbook, 1);
-                curTastySum -= attribute[j][0];
-                curSatietySum -= attribute[j][1];
+        for (int c = 0; c < n; c++) {
+            if (check(r, c, cur)) {
+                vis.put(c, true);
+                prim1.put(r+c, true);
+                prim2.put(r-c, true);
+                cur[r] = c;
+                dfs(r+1, n);
+                vis.put(c, false);
+                prim1.put(r+c, false);
+                prim2.put(r-c, false);
             }
         }
+    }
+
+    private boolean check(int r, int c, int[] cur) {
+        Boolean isVis = vis.getOrDefault(c, false);
+        if (isVis) return false;
+        Boolean p1Vis = prim1.getOrDefault(r + c, false);
+        Boolean p2Vis = prim2.getOrDefault(r - c, false);
+        return !p1Vis && !p2Vis;
+    }
+
+    public static void main(String[] args) {
+        Solution s = new Solution();
+        int n = 4;
+        System.out.println(s.solveNQueens(4));
     }
 }
