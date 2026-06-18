@@ -5,19 +5,17 @@ public class Solution {
         int ans = 0;
         int left = 0;
         for (int right = 0; right < nums.length; right++) {
-            if (nums[right] != 1) {
-                if (k > 0) {
-                    k -= 1;
-                } else {
-                    while (left < right && nums[left] != 0) {
-                        left += 1;
+            if (nums[right] == 0) {
+                while (k == 0) {
+                    if (nums[left] == 0) {
+                        k += 1;
                     }
                     left += 1;
                 }
+                k -= 1;
             }
             ans = Math.max(ans, right-left+1);
         }
-
         return ans;
     }
 }

@@ -2,26 +2,32 @@ package q2962;
 
 public class Solution {
     public long countSubarrays(int[] nums, int k) {
-        int max = Integer.MIN_VALUE;
+        int maxV = 0;
         for (int num : nums) {
-            max = Math.max(max, num);
+            maxV = Math.max(maxV, num);
         }
         long ans = 0;
-        int currentOcc = 0, left = 0;
+        int left = 0;
+        int occ = 0;
         for (int num : nums) {
-            if (num == max) {
-                currentOcc += 1;
+            if (num == maxV) {
+                occ += 1;
             }
-            while (currentOcc >= k) {
-                if (nums[left] == max) {
-                    currentOcc -= 1;
+            while (occ >= k) {
+                if (nums[left] == maxV) {
+                    occ--;
                 }
-                left += 1;
+                left++;
             }
-            // 从0到left-1都是有效的以right为右边界数组的子数组
             ans += left;
         }
-
         return ans;
+    }
+
+    public static void main(String[] args) {
+        int[] n = {1,3,2,3,3};
+        int k = 2;
+        Solution s = new Solution();
+        System.out.println(s.countSubarrays(n, k));
     }
 }

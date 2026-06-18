@@ -5,34 +5,30 @@ import java.util.Map;
 
 public class Solution {
     public int minLength(int[] nums, int k) {
-        int n = nums.length;
-        Map<Integer, Integer> mp = new HashMap<>();
+        if (nums == null || nums.length == 0) return -1;
+        Map<Integer, Integer> m = new HashMap<>();
         int ans = Integer.MAX_VALUE;
+        long sum = 0;
         int left = 0;
-        long subArrSum = 0;
-        for (int right = 0; right < n; right++) {
-//            int curNum = nums[right];
-//            if (curNum == 77) {
-//                System.out.println(curNum);
-//            }
-            Integer curOccCnt = mp.getOrDefault(nums[right], 0);
-            curOccCnt += 1;
-            mp.put(nums[right], curOccCnt);
-            if (curOccCnt < 2) {
-                subArrSum += nums[right];
-            }
-            if (subArrSum < k) {
+        for (int right = 0; right < nums.length; right++) {
+            m.put(nums[right], m.getOrDefault(nums[right], 0)+1);
+            if (m.getOrDefault(nums[right], 0) < 2) {
+                sum += nums[right];
+            } else {
                 continue;
             }
-            while (subArrSum - nums[left] >= k || mp.getOrDefault(nums[left], 0) > 1) {
-                Integer leftOccCnt = mp.getOrDefault(nums[left], 0);
-                if (leftOccCnt < 2) {
-                    subArrSum -= nums[left];
+            if (sum < k) continue;
+            while (m.getOrDefault(nums[left], 0) > 1 || sum - nums[left] >= k) {
+                m.put(nums[left], m.getOrDefault(nums[left], 0)-1);
+                if (m.getOrDefault(nums[left], 0) == 0) {
+                    m.remove(nums[left]);
+                    sum -= nums[left];
                 }
-                mp.put(nums[left], leftOccCnt-1);
-                ++left;
+                left++;
             }
-            ans = Math.min(ans, right-left+1);
+            if (sum >= k) {
+                ans = Math.min(ans, right-left+1);
+            }
         }
         return ans == Integer.MAX_VALUE ? -1 : ans;
     }
@@ -40,8 +36,10 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] arr = {57,75,43,52,80,27,18,33,16,75,77,71,10,34};
-        int k = 152;
+//        int[] arr = {57,75,43,52,80,27,18,33,16,75,77,71,10,34};
+        int[] arr = {6,6,11};
+//        int k = 152;
+        int k = 12;
         int res = solution.minLength(arr, k);
         System.out.println(res);
     }

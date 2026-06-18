@@ -5,58 +5,43 @@ import java.util.Map;
 
 public class Solution {
     public int longestSemiRepetitiveSubstring(String s) {
-        if (s.length() < 3) return s.length();
-        char[] chArr = s.toCharArray();
-        Map<String, Integer> mp = new HashMap<>();
         int ans = 0;
-        int left = 0;
-        for (int right = 0; right < chArr.length; right++) {
-            if (right == 0) {
-                ans += 1;
+        int l = 0;
+        Map<String, Integer> m = new HashMap<>();
+        char[] ca = s.toCharArray();
+        for (int r = 0; r < ca.length; r++) {
+            if (r == 0) {
+                ans = 1;
                 continue;
             }
-            if (chArr[right-1] == chArr[right]) {
-                String str = "" + chArr[right - 1] + chArr[right];
-                mp.put(str, mp.getOrDefault(str, 0) + 1);
-                if (mp.size() > 1 || mp.getOrDefault(str, 0) > 1) {
-                    while (left+1 < right &&
-                            (mp.size() > 1 || mp.getOrDefault(str, 0) > 1)) {
-                        String lStr = "" + chArr[left] + chArr[left + 1];
-                        Integer rem = mp.getOrDefault(lStr, 0);
-                        if (rem > 0) {
-                            rem -= 1;
-                            mp.put(lStr, rem);
-                            if (rem == 0) {
-                                mp.remove(lStr);
-                            }
+            if (ca[r] == ca[r-1]) {
+                String pre = "" + ca[r] + ca[r-1];
+                m.put(pre, m.getOrDefault(pre, 0)+1);
+                while (m.size() > 1 || m.getOrDefault(pre, 0) > 1) {
+                    String p =  "" + ca[l] + ca[l+1];
+                    Integer rem = m.getOrDefault(p, 0);
+                    if (rem > 0) {
+                        rem -= 1;
+                        if (rem == 0) {
+                            m.remove(p);
+                        } else {
+                            m.put(p, rem);
                         }
-                        left +=1;
                     }
+                    l += 1;
                 }
             }
-            ans = Math.max(ans, right-left+1);
+            ans = Math.max(ans, r-l+1);
         }
-
+        // 111
         return ans;
+    }
 
-
-//        char[] s = S.toCharArray();
-//        int ans = 1;
-//        int same = 0;
-//        int left = 0;
-//        for (int right = 1; right < s.length; right++) {
-//            if (s[right] == s[right - 1]) {
-//                same++;
-//            }
-//            if (same > 1) { // same == 2
-//                left++;
-//                while (s[left] != s[left - 1]) {
-//                    left++;
-//                }
-//                same = 1;
-//            }
-//            ans = Math.max(ans, right - left + 1);
-//        }
-//        return ans;
+    public static void main(String[] args) {
+        String[] ss = {"52233", "5494", "1111111"};
+        Solution s = new Solution();
+        for (String str : ss) {
+            System.out.println(s.longestSemiRepetitiveSubstring(str));
+        }
     }
 }
