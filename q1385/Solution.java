@@ -6,24 +6,51 @@ public class Solution {
 //    绝对值函数$f(x) = |x - j| 在数轴上是 V 字型的,不是单调的,所以不能直接对绝对值的结果做二分
     // 比如j = 100, arr2[mid]=1000, arr2[mid-1]=95, d = 120, 按照二分逻辑忽略了95, 其实j是不合格的
     // 在二分查找中,mid 的移动必须基于明确的区间排除
+//    public int findTheDistanceValue(int[] arr1, int[] arr2, int d) {
+//        Arrays.sort(arr2);
+//        int ans = 0;
+//        for (int j : arr1) {
+//            // |j-arr2[i]| <= d ==>
+//            // -d <= j-arr2[i] <= d ==>
+//            // -d + arr2[i] <= j <= d + arr2[i] ==>
+//            // 等式两边分别+/-d, 则arr2[i] <= j+d以及arr2[i]>=j-d ==> j-d<=arr2[i]<=j+d
+//            int left = 0, right = arr2.length - 1;
+//            while (left <= right) {
+//                int mid = (left + right) >>> 1;
+//                if (arr2[mid] > j+d) {
+//                    right = mid-1;
+//                } else if (arr2[mid] < j-d) {
+//                    left = mid+1;
+//                } else {break;}
+//            }
+//            if (left > right) {
+//                ans += 1;
+//            }
+//        }
+//        return ans;
+//    }
+
     public int findTheDistanceValue(int[] arr1, int[] arr2, int d) {
+        int m = arr1.length, n = arr2.length;
+        if (m == 0 || n == 0) return 0;
         Arrays.sort(arr2);
+        // |a-b|<=d ==> -d<=a-b<=d ==> a>=b-d,a<=d+b ==> b>=a-d,b<=a+d ==> a-d<=b<=a+d
         int ans = 0;
-        for (int j : arr1) {
-            // |j-arr2[i]| <= d ==>
-            // -d <= j-arr2[i] <= d ==>
-            // -d + arr2[i] <= j <= d + arr2[i] ==>
-            // 等式两边分别+/-d, 则arr2[i] <= j+d以及arr2[i]>=j-d ==> j-d<=arr2[i]<=j+d
-            int left = 0, right = arr2.length - 1;
+        for (int arr : arr1) {
+            int left = 0, right = n-1;
+            int target1 = arr-d;
+            int target2 = arr+d;
             while (left <= right) {
                 int mid = (left + right) >>> 1;
-                if (arr2[mid] > j+d) {
-                    right = mid-1;
-                } else if (arr2[mid] < j-d) {
-                    left = mid+1;
-                } else {break;}
+                if (arr2[mid] < target1) {
+                    left = mid + 1;
+                } else if (arr2[mid] > target2) {
+                    right = mid - 1;
+                } else {
+                    break;
+                }
             }
-            if (left > right) {
+            if (right < left) {
                 ans += 1;
             }
         }

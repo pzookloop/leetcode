@@ -2,35 +2,32 @@ package q2439;
 
 public class Solution {
     public int minimizeArrayValue(int[] nums) {
-        int lBound = 0;
-        int rBound = 0;
+        int left = Integer.MAX_VALUE, right = 0;
         for (int num : nums) {
-            rBound = Math.max(num, rBound);
+            left = Math.min(left, num);
+            right = Math.max(right, num);
         }
-
-        while (lBound <= rBound) {
-            int mid = (lBound + rBound) >>> 1;
+        while (left <= right) {
+            int mid = (left + right) >>> 1;
             if (check(nums, mid)) {
-                rBound = mid - 1;
+                right = mid - 1;
             } else {
-                lBound = mid + 1;
+                left = mid + 1;
             }
         }
-        return lBound;
+        return left;
     }
 
     private boolean check(int[] nums, int limit) {
         long extra = 0;
-        for (int i = nums.length-1; i > 0; i--) {
-            long  fe = nums[i] + extra;
-            if (fe > limit) {
-                extra = fe - limit;
-            } else {
+        for (int i = nums.length-1; i > 0; --i) {
+            if ((nums[i] + extra) <= limit) {
                 extra = 0;
+                continue;
             }
+            extra = (nums[i] + extra) - limit;
         }
-
-        return (nums[0] + extra) <= (long) limit;
+        return (extra + nums[0]) <= limit;
     }
 
     public static void main(String[] args) {

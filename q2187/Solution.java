@@ -1,19 +1,19 @@
 package q2187;
 
-import java.util.Arrays;
-
 public class Solution {
     public long minimumTime(int[] time, int totalTrips) {
-        Arrays.sort(time);
-        long left = 1, right = (long)(1e14);
+        int fast = Integer.MAX_VALUE, slow = Integer.MIN_VALUE;
+        for (int t : time) {
+            fast = Math.min(fast, t);
+            slow = Math.max(slow, t);
+        }
+        int n = time.length;
+        int round = (totalTrips+n-1)/n;
+        long right = (long) round * slow;
+        long left = (long) round * fast;
         while (left <= right) {
             long mid = (left + right) >>> 1;
-            long canTrips = 0;
-            for (int t : time) {
-                if (t > mid) break;
-                canTrips += mid / t;
-            }
-            if (canTrips < totalTrips) {
+            if (check(time, mid, totalTrips)) {
                 left = mid + 1;
             } else {
                 right = mid - 1;
@@ -22,11 +22,19 @@ public class Solution {
         return left;
     }
 
+    private boolean check(int[] time, long totalTime, int totalTrips) {
+        long realTrips = 0;
+        for (int t : time) {
+            realTrips += totalTime / t;
+        }
+        return realTrips < totalTrips;
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[] time = {2};
-        int totalTrips = 1;
+        int[] time = {1,2,3};
+        int totalTrips = 5;
         System.out.println(solution.minimumTime(time, totalTrips));
     }
 }
