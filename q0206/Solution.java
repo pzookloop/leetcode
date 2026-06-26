@@ -7,12 +7,11 @@ public class Solution {
         ListNode pre = null;
         ListNode cur = head;
         while (cur != null) {
-            ListNode nxt = cur.next;
+            ListNode next = cur.next;
             cur.next = pre;
             pre = cur;
-            cur = nxt;
+            cur = next;
         }
-
         return pre;
     }
 }

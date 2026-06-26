@@ -5,30 +5,31 @@ import dataStruct.ListNode;
 public class Solution {
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode rL1 = reverse(l1);
-        ListNode rL2 = reverse(l2);
-        int extra = 0, sum, val;
-        ListNode curL1 = rL1, curL2 = rL2;
-        ListNode res = null;
-        while (curL1 != null || curL2 != null) {
-            sum = (curL1 != null ? curL1.val : 0) +
-                    (curL2 != null ? curL2.val : 0);
-            val = (sum + extra) % 10;
-            extra = (sum + extra) / 10;
-            res = new ListNode(val, res);
-            curL1 = curL1 != null ? curL1.next : null;
-            curL2 = curL2 != null ? curL2.next : null;
+        ListNode d1 = reverse(l1);
+        ListNode d2 = reverse(l2);
+        ListNode head = new ListNode(-1, null);
+        int extra = 0;
+        while (d1 != null || d2 != null) {
+            int sum = 0;
+            if (d1 != null) {
+                sum += d1.val;
+                d1 = d1.next;
+            }
+            if (d2 != null) {
+                sum += d2.val;
+                d2 = d2.next;
+            }
+            sum += extra;
+            extra = sum / 10;
+            head.next = new ListNode(sum % 10, head.next);
         }
-
         if (extra > 0) {
-            res = new ListNode(extra, res);
+            head.next = new ListNode(extra, head.next);
         }
-        return res;
+        return head.next;
     }
 
-    private ListNode reverse(ListNode head) {
-        assert head != null;
-        ListNode cur = head;
+    private ListNode reverse(ListNode cur) {
         ListNode pre = null;
         while (cur != null) {
             ListNode next = cur.next;

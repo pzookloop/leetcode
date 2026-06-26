@@ -30,7 +30,6 @@ public class Solution {
             p0.next = pre;
             p0 = nxt;
         }
-
         return dummy.next;
     }
 }

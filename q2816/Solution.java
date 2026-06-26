@@ -4,30 +4,23 @@ import dataStruct.ListNode;
 
 public class Solution {
     public ListNode doubleIt(ListNode head) {
-        ListNode cur = reverse(head);
-        ListNode pre = null;
-        int extra = 0, sum, val;
-        while (cur != null) {
-            sum = extra + 2 * cur.val;
-            val = sum % 10;
-            extra = sum / 10;
-            cur.val = val;
-            ListNode next = cur.next;
-            cur.next = pre;
-            pre = cur;
-            cur = next;
+        ListNode h = reverse(head);
+        ListNode dummy = new ListNode(-1, null);
+        int extra = 0;
+        while (h != null) {
+            int val = 2 * h.val + extra;
+            extra = val / 10;
+            dummy.next = new ListNode(val % 10, dummy.next);
+            h = h.next;
         }
-
         if (extra > 0) {
-            pre = new ListNode(extra, pre);
+            dummy.next = new ListNode(extra, dummy.next);
         }
-
-        return pre;
+        return dummy.next;
     }
 
-    private ListNode reverse(ListNode head) {
+    private ListNode reverse(ListNode cur) {
         ListNode pre = null;
-        ListNode cur = head;
         while (cur != null) {
             ListNode next = cur.next;
             cur.next = pre;
