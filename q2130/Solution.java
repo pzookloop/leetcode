@@ -6,42 +6,33 @@ import static dataStruct.ListNode.construct;
 
 public class Solution {
     public int pairSum(ListNode head) {
-        int ans = 0;
-        ListNode midNode = findMidNode(head);
-        ListNode midReverse = reverseList(midNode);
-        // 1->1->[2]<-3
-        while (midReverse != null) {
-            ans = Math.max(head.val+ midReverse.val, ans);
-            midReverse = midReverse.next;
-            head = head.next;
-        }
-
-        return ans;
-    }
-
-    private ListNode reverseList(ListNode head) {
-        ListNode pre = null;
-        ListNode cur = head;
-        while (cur != null) {
-            ListNode nxt = cur.next;
-            cur.next = pre;
-            pre = cur;
-            cur = nxt;
-        }
-        return pre;
-    }
-
-    private ListNode findMidNode(ListNode head) {
+        // 找到中间节点
         ListNode slow = head, fast = head;
+        ListNode pre = null, cur = slow;
         while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
+            cur.next = pre;
+            pre = cur;
+            cur = slow;
         }
-        return slow;
+        // 1 2 3 4 5
+        if (fast != null) {
+            cur = cur.next;
+        }
+
+        int max = 0;
+        while (cur != null && pre != null) {
+            int sum = cur.val + pre.val;
+            max = Math.max(max, sum);
+            cur = cur.next;
+            pre = pre.next;
+        }
+        return max;
     }
 
     public static void main(String[] args) {
-        int[] nums = {1,100000};
+        int[] nums = {4,2,2,3};
         ListNode head = construct(nums);
         Solution s = new Solution();
         System.out.println(s.pairSum(head));

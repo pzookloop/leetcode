@@ -4,23 +4,21 @@ import dataStruct.ListNode;
 
 public class Solution {
     public ListNode detectCycle(ListNode head) {
-        ListNode fast = head, slow = head, h = null;
-
+        if (head == null) return null;
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode hd = head;
         while (fast != null && fast.next != null) {
-            fast = fast.next.next;
             slow = slow.next;
-            if (fast == slow) {
-                h = head;
-                while (slow != h) {
+            fast = fast.next.next;
+            if (slow == fast) {
+                while (slow != null && slow != hd) {
                     slow = slow.next;
-                    h = h.next;
+                    hd = hd.next;
                 }
-
-                return h;
+                return hd;
             }
         }
-
-
-        return h;
+        return null;
     }
 }

@@ -22,7 +22,7 @@ public class Solution {
     private ListNode reverse(ListNode cur) {
         ListNode pre = null;
         while (cur != null) {
-            ListNode next = cur.next;
+            ListNode  next = cur.next;
             cur.next = pre;
             pre = cur;
             cur = next;

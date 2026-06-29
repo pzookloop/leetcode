@@ -6,42 +6,37 @@ import static dataStruct.ListNode.construct;
 
 public class Solution {
     public boolean isPalindrome(ListNode head) {
-        if (head.next == null) return true;
-        int sum = 0;
-        ListNode cur = head;
-        while (cur != null) {
-            sum += 1;
-            cur = cur.next;
+        int num = 0;
+        ListNode hd = head;
+        while (hd != null) {
+            num += 1;
+            hd = hd.next;
         }
-
-        int mid = sum / 2 + (sum % 2 == 0 ? 1 : 2);
-        ListNode l2 = reverseList(head, mid, sum);
-        ListNode l1 = head;
-        while (l1 != null && l2 != null) {
-            if (l1.val != l2.val) return false;
-            l1 = l1.next;
-            l2 = l2.next;
+        if (num == 1) return true;
+        int mid = num % 2 == 0 ? (num / 2) : (num / 2 + 1);
+        ListNode midNode = head;
+        while (mid > 0) {
+            mid -= 1;
+            midNode = midNode.next;
+        }
+        ListNode reHd = reverseList(midNode);
+        while (reHd != null) {
+            if (reHd.val != head.val) return false;
+            reHd = reHd.next;
+            head = head.next;
         }
         return true;
     }
 
-    private ListNode reverseList(ListNode head, int left, int right) {
-        ListNode p0 = new ListNode(-1, head);
-        for (int i = 1; i < left; i++) {
-            p0 = p0.next;
-        }
+    private ListNode reverseList(ListNode midNode) {
         ListNode pre = null;
-        ListNode cur = p0.next;
-        for (int i = 0; i < right-left+1; i++) {
+        ListNode cur = midNode;
+        while (cur != null) {
             ListNode next = cur.next;
             cur.next = pre;
             pre = cur;
             cur = next;
         }
-
-        p0.next.next = cur;
-        p0.next = pre;
-
         return pre;
     }
 
