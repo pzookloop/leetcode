@@ -2,6 +2,9 @@ package q2130;
 
 import dataStruct.ListNode;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static dataStruct.ListNode.construct;
 
 public class Solution {
