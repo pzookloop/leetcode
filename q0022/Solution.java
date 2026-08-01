@@ -1,12 +1,15 @@
 package q0022;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Solution {
     private final List<String> ans = new ArrayList<>();
     private final List<Character> path = new ArrayList<>();
     public List<String> generateParenthesis(int n) {
+        int[] candidates = new int[10];
+        Arrays.sort(candidates);
         for (int i = 0; i < n * 2; i++) path.add('0');
         dfsOutput(0, 0, n * 2, n);
         return ans;
@@ -34,6 +37,31 @@ public class Solution {
             path.removeLast();
         }
     }
+
+//    private final List<String> ans = new ArrayList<>();
+//    private final StringBuilder que = new StringBuilder();
+
+//    /**
+//     *
+//     * @param open 左括号
+//     * @param close 右括号
+//     * @param n n
+//     */
+//    private void dfsInput(int open, int close, int n) {
+//        if(open + close > 2 * n) return;
+//        if(open == n &&  close == n && open + close == 2 * n) {
+//            ans.add(que.toString());
+//            return;
+//        }
+//        if(close < open) {
+//            que.append(")");
+//            dfsInput(open, close+1, n);
+//            que.deleteCharAt(que.length()-1);
+//        }
+//        que.append("(");
+//        dfsInput(open+1, close, n);
+//        que.deleteCharAt(que.length()-1);
+//    }
 
     public static void main(String[] args) {
         Solution s = new Solution();
