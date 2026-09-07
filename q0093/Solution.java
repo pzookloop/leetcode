@@ -7,63 +7,70 @@ public class Solution {
     public List<String> restoreIpAddresses(String s) {
         List<String> path = new ArrayList<>();
         List<String> ans = new ArrayList<>();
-        dfsInput(s, path, 0, 0, 0, ans);
-//        dfsOutput(s, path, 0, 0, ans);
+
+        dfsOutput(0, 0, 4, s, path, ans);
+
         return ans;
     }
 
-    private void dfsInput(String s, List<String> path, int start, int i, int curPoint, List<String> ans) {
-        if (curPoint > 4) return;
+    private void dfsOutput(int i, int start, int pointCnt, String s, List<String> path, List<String> ans) {
+        if (i > s.length() || pointCnt < 0) return;
         if (i == s.length()) {
-            if (curPoint == 4) {
-                ans.add(String.join( ".", path));
+            if (pointCnt == 0) {
+                ans.add(String.join(".", path));
             }
             return;
         }
-        if (!canSplit(s, start, i)) return;
-        if (maxThan255(s, start, i)) return;
         if (i < s.length()-1) {
-            dfsInput(s, path, start, i+1, curPoint, ans);
+            dfsOutput(i+1, start, pointCnt, s, path, ans);
         }
-        path.add(s.substring(start, i+1));
-        dfsInput(s, path, i+1, i+1, curPoint+1, ans);
-        path.removeLast();
+        String str = s.substring(start, i+1);
+        if (check(str)) {
+            path.add(str);
+            dfsOutput(i+1, i+1, pointCnt-1, s, path, ans);
+            path.removeLast();
+        };
     }
 
-    private boolean maxThan255(String str, int i, int j) {
-        String substring = str.substring(i, j + 1);
-        try {
-            long curNum = Long.parseLong(substring);
-            return curNum > 255;
-        } catch (Exception e) {
-            return false;
-        }
-    }
 
-    private boolean canSplit(String str, int i, int j) {
-        String substring = str.substring(i, j + 1);
-        return substring.length() <= 1 || str.charAt(i) != '0';
-    }
-
-    private void dfsOutput(String s, List<String> path, int i, int curPoint, List<String> ans) {
-        if (curPoint > 4) return;
+    private void dfsInput(int i, int start, int pointCnt, String s, List<String> path, List<String> ans) {
+        if (i > s.length() || pointCnt < 0) return;
         if (i == s.length()) {
-            if (curPoint == 4) {
-                ans.add(String.join( ".", path));
+            if (pointCnt == 0) {
+                ans.add(String.join(".", path));
             }
             return;
         }
         for (int j = i; j < s.length(); ++j) {
-            if (maxThan255(s, i, j)) {
-                break;
-            }
-            if (canSplit(s, i, j)) {
-                path.add(s.substring(i, j+1));
-                dfsOutput(s, path, j+1, curPoint+1, ans);
+            String str = s.substring(start, j+1);
+            if (check(str)) {
+                path.add(str);
+                dfsInput(j+1, j+1, pointCnt-1, s, path, ans);
                 path.removeLast();
-            } else {
-                break;
-            }
+            } else break;
+        }
+    }
+
+    private boolean check(String str) {
+        // 1. 不允许先导 0
+        boolean zeroStart = zeroStart(str);
+        // 2. 范围为 0-255
+        boolean validNumber = validNumber(str);
+        return !zeroStart && validNumber;
+    }
+
+    private boolean zeroStart(String str) {
+        if (str == null) return true;
+        if (str.length() == 1) return false;
+        return "0".equals(str.substring(0,1));
+    }
+
+    private boolean validNumber(String str) {
+        try {
+            int number = Integer.parseInt(str);
+            return number >= 0 && number <= 255;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
